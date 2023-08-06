@@ -1,24 +1,7 @@
 const { ipcRenderer, clipboard, nativeImage } = require('electron');
 const { getCurrentWindow } = require('@electron/remote');
 const Tesseract = require('tesseract.js');
-
-function blob_to_buffer(blob, callback) {
-    const file_reader = new FileReader()
-
-    file_reader.addEventListener("loadend", event => {
-        if (file_reader.error) {
-            callback(file_reader.error)
-        } else {
-            callback(null, Buffer.from(file_reader.result))
-        }
-    }, false)
-
-    file_reader.readAsArrayBuffer(blob)
-    return file_reader
-}
-
 var window = getCurrentWindow();
-
 
 async function cropOrTesseractImage(imageURL, TypeRequest) {
     const target = document.getElementById("target");
@@ -62,14 +45,16 @@ async function cropOrTesseractImage(imageURL, TypeRequest) {
                                 const native_image = nativeImage.createFromBuffer(buffer);
                                 clipboard.writeImage(native_image)
 
-                                const x = document.getElementById("snackbarText");
-                                x.innerHTML = "Cropped image copied to clipboard..!!❤️"
-                                x1.className = x1.className.replace("show", "");
-                                x.className = "show";
-                                setTimeout(function () {
-                                    x.className = x.className.replace("show", "");
-                                    window.close();
-                                }, 1000);
+                                const alert = document.getElementById("alert");
+                                if (alert) {
+                                    alert.innerHTML = "Cropped image copied to clipboard."
+                                    x1.className = x1.className.replace("show", "");
+                                    alert.className = "show";
+                                    setTimeout(function () {
+                                        alert.className = alert.className.replace("show", "");
+                                        window.close();
+                                    }, 2000);
+                                }
                             })
                         })
                     }
@@ -82,14 +67,16 @@ async function cropOrTesseractImage(imageURL, TypeRequest) {
                         if (result && result.data.text) {
                             clipboard.writeText(result.data.text);
 
-                            const x = document.getElementById("snackbarText");
-                            x.innerHTML = "Text copied to clipboard..!!❤️";
-                            x1.className = x1.className.replace("show", "");
-                            x.className = "show";
-                            setTimeout(function () {
-                                x.className = x.className.replace("show", "");
-                                window.close();
-                            }, 1000);
+                            const alert = document.getElementById("alert");
+                            if (alert) {
+                                alert.innerHTML = "Text copied to clipboard.";
+                                x1.className = x1.className.replace("show", "");
+                                alert.className = "show";
+                                setTimeout(function () {
+                                    alert.className = alert.className.replace("show", "");
+                                    window.close();
+                                }, 2000);
+                            }
                         } else {
                             window.close();
                         }
@@ -112,3 +99,18 @@ ipcRenderer.on('request-object', async function (event, requestObject) {
         await cropOrTesseractImage(imageUrl, TypeRequest);
     }
 });
+
+function blob_to_buffer(blob, callback) {
+    const file_reader = new FileReader()
+
+    file_reader.addEventListener("loadend", event => {
+        if (file_reader.error) {
+            callback(file_reader.error)
+        } else {
+            callback(null, Buffer.from(file_reader.result))
+        }
+    }, false)
+
+    file_reader.readAsArrayBuffer(blob)
+    return file_reader
+}

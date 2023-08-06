@@ -23,7 +23,7 @@ function createWindow(requestType) {
             cropWindow.webContents.send('request-object', request);
         });
 
-        cropWindow.webContents.openDevTools();
+        //cropWindow.webContents.openDevTools();
 
         cropWindow.once('ready-to-show', () => {
             cropWindow.show()

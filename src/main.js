@@ -9,8 +9,8 @@ var mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 400,
     resizable: false,
     show: false,
     webPreferences: {
@@ -20,7 +20,7 @@ function createWindow() {
     }
   })
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
   mainWindow.removeMenu()
   mainWindow.loadFile('src/home/index.html')
   mainWindow.once('ready-to-show', () => {
