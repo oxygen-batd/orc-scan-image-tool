@@ -13,15 +13,16 @@ function createWindow() {
     height: 600,
     resizable: false,
     show: false,
-    icon: path.join(__dirname, './fav.ico'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true
     }
   })
+
+  mainWindow.webContents.openDevTools();
   mainWindow.removeMenu()
-  mainWindow.loadFile('src/index.html')
+  mainWindow.loadFile('src/home/index.html')
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
   })
@@ -47,12 +48,15 @@ app.whenReady().then(() => {
     mainWindow.webContents.send('key-shortcut-ocr', 2);
   })
   globalShortcut.register('Esc', () => {
-    mainWindow.webContents.send('close-crop');
+    // Đóng tất cả các cửa sổ khác
+    BrowserWindow.getAllWindows().forEach((window) => {
+      if (window !== mainWindow) {
+        window.close();
+      }
+    });
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
