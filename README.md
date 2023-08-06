@@ -1,1 +1,2 @@
-# sysOCR
+# OCR Tool
+By BaTB
